@@ -1,6 +1,5 @@
-def main():
-    print("Hello from job-tracker!")
+from job_tracker.app import render_app
 
 
 if __name__ == "__main__":
-    main()
+    render_app()
