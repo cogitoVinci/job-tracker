@@ -20,7 +20,7 @@ def calculate_success_rate(applications: Iterable[dict]) -> float:
     if not application_list:
         return 0.0
 
-    successful_statuses = {"内定", "合格", "通過"}
+    successful_statuses = {"内定"}
 
     successful_count = sum(
         1

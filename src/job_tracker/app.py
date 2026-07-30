@@ -17,14 +17,13 @@ from job_tracker.stats import (
     count_by_status,
 )
 
-STATUSES = ["検討中", "応募済み", "書類選考", "面接", "通過", "内定", "不合格"]
+STATUSES = ["検討中", "応募済み", "書類選考", "面接", "内定", "不合格"]
 
 STATUS_COLORS = {
     "検討中":   {"bg": "#eef1f4", "text": "#5b6773"},
     "応募済み": {"bg": "#e5f0ff", "text": "#1d5fd6"},
     "書類選考": {"bg": "#f1ecff", "text": "#6d3fd1"},
     "面接":     {"bg": "#fff2df", "text": "#c4741a"},
-    "通過":     {"bg": "#e1faf6", "text": "#0f9c88"},
     "内定":     {"bg": "#e3f9e9", "text": "#1a8f4c"},
     "不合格":   {"bg": "#fdecec", "text": "#c53c33"},
 }
@@ -228,7 +227,7 @@ def main():
 
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("応募件数", total)
-    m2.metric("通過・内定率", f"{success_rate:.0%}")
+    m2.metric("内定率", f"{success_rate:.0%}")
     m3.metric("面接中", status_counts.get("面接", 0))
     m4.metric("7日以内の締切", len(upcoming))
 
