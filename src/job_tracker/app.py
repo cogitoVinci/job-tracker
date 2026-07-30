@@ -9,6 +9,7 @@ from job_tracker.database import (
     delete_application,
     get_applications,
     initialize_database,
+    update_application,
 )
 from job_tracker.models import Application
 from job_tracker.stats import (
@@ -17,15 +18,24 @@ from job_tracker.stats import (
     count_by_status,
 )
 
-STATUSES = ["検討中", "応募済み", "書類選考", "面接", "内定", "不合格"]
+STATUSES = [
+    "検討中",
+    "ES",
+    "適性検査",
+    "面接",
+    "内定",
+    "不合格",
+    "辞退",
+]
 
 STATUS_COLORS = {
-    "検討中":   {"bg": "#eef1f4", "text": "#5b6773"},
-    "応募済み": {"bg": "#e5f0ff", "text": "#1d5fd6"},
-    "書類選考": {"bg": "#f1ecff", "text": "#6d3fd1"},
-    "面接":     {"bg": "#fff2df", "text": "#c4741a"},
-    "内定":     {"bg": "#e3f9e9", "text": "#1a8f4c"},
-    "不合格":   {"bg": "#fdecec", "text": "#c53c33"},
+    "検討中": {"bg": "#f1f3f5", "text": "#495057"},
+    "ES": {"bg": "#e7f1ff", "text": "#1769aa"},
+    "適性検査": {"bg": "#fff3cd", "text": "#946200"},
+    "面接": {"bg": "#f3e8ff", "text": "#7b2cbf"},
+    "内定": {"bg": "#dff7e8", "text": "#198754"},
+    "不合格": {"bg": "#fde8e8", "text": "#c92a2a"},
+    "辞退": {"bg": "#eceff1", "text": "#607d8b"},
 }
 
 CUSTOM_CSS = """
@@ -148,13 +158,10 @@ def render_sidebar_form(conn):
         status = st.selectbox("選考状況", STATUSES)
         applied_date = st.date_input("応募日", value=date.today())
 
-        use_deadline = st.checkbox("締切日を設定する")
-        deadline = None
-        if use_deadline:
-            deadline = st.date_input(
-                "締切日",
-                value=date.today() + timedelta(days=7),
-            )
+        deadline = st.date_input(
+            "締切日",
+            value=date.today() + timedelta(days=7),
+        )
 
         notes = st.text_area(
             "メモ",
@@ -221,7 +228,11 @@ def main():
 
     upcoming = get_upcoming_deadlines(apps)
 
-    total = calculate_total(apps)
+    applied_apps = [
+        app for app in apps
+        if app["status"] != "検討中"
+    ]
+    total = len(applied_apps)
     success_rate = calculate_success_rate(apps)
     status_counts = count_by_status(apps)
 
@@ -353,42 +364,149 @@ def main():
                 use_container_width=True,
             )
 
-            st.divider()
-            st.subheader("データの削除")
+        st.divider()
+        st.subheader("データの編集")
 
-            delete_options = {}
+        if apps:
+            edit_options = {
+                f'{item["company"]} / {item["position"]}（ID:{item["id"]}）':
+                    item
+                for item in apps
+            }
 
-            for item in apps:
-                label = (
-                    f"{item['company']} "
-                    f"({item['position']}) "
-                    f"- ID:{item['id']}"
+            selected_edit_label = st.selectbox(
+                "編集する項目を選択",
+                options=list(edit_options.keys()),
+                key="edit_application_selector",
+            )
+            selected_edit = edit_options[selected_edit_label]
+
+            current_status = selected_edit["status"]
+            status_index = (
+                STATUSES.index(current_status)
+                if current_status in STATUSES
+                else 0
+            )
+
+            current_applied_date = date.fromisoformat(
+                selected_edit["applied_date"]
+            )
+
+            current_deadline = (
+                date.fromisoformat(selected_edit["deadline"])
+                if selected_edit.get("deadline")
+                else current_applied_date + timedelta(days=7)
+            )
+
+            with st.form("edit_application_form"):
+                edit_company = st.text_input(
+                    "企業名",
+                    value=selected_edit["company"],
                 )
-                delete_options[label] = item["id"]
-
-            selected_item = st.selectbox(
-                "削除する項目を選択",
-                options=list(delete_options.keys()),
-            )
-
-            confirmed = st.checkbox(
-                "削除する内容を確認しました"
-            )
-
-            delete_clicked = st.button(
-                "選択した項目を削除",
-                type="secondary",
-                disabled=not confirmed,
-                use_container_width=True,
-            )
-
-            if delete_clicked:
-                delete_application(
-                    conn,
-                    delete_options[selected_item],
+                edit_position = st.text_input(
+                    "職種・コース",
+                    value=selected_edit["position"],
                 )
-                st.success("削除しました。")
-                st.rerun()
+                edit_status = st.selectbox(
+                    "選考状況",
+                    options=STATUSES,
+                    index=status_index,
+                    key="edit_status",
+                )
+                edit_applied_date = st.date_input(
+                    "応募日",
+                    value=current_applied_date,
+                    key="edit_applied_date",
+                )
+
+                has_deadline = st.checkbox(
+                    "締切日を設定する",
+                    value=selected_edit.get("deadline") is not None,
+                    key="edit_has_deadline",
+                )
+
+                edit_deadline_value = st.date_input(
+                    "締切日",
+                    value=current_deadline,
+                    key="edit_deadline",
+                )
+
+                edit_notes = st.text_area(
+                    "メモ",
+                    value=selected_edit.get("notes") or "",
+                    placeholder="次回予定、提出物、連絡事項など",
+                )
+
+                update_submitted = st.form_submit_button(
+                    "変更を保存",
+                    type="primary",
+                    use_container_width=True,
+                )
+
+            if update_submitted:
+                if not edit_company.strip():
+                    st.error("企業名を入力してください。")
+                elif not edit_position.strip():
+                    st.error("職種・コースを入力してください。")
+                else:
+                    updated_application = Application(
+                        company=edit_company.strip(),
+                        position=edit_position.strip(),
+                        status=edit_status,
+                        applied_date=edit_applied_date,
+                        deadline=(
+                            edit_deadline_value
+                            if has_deadline
+                            else None
+                        ),
+                        notes=edit_notes.strip(),
+                    )
+
+                    update_application(
+                        conn,
+                        selected_edit["id"],
+                        updated_application,
+                    )
+                    st.success("選考情報を更新しました。")
+                    st.rerun()
+        else:
+            st.info("編集できるデータがありません。")
+
+        st.subheader("データの削除")
+
+        delete_options = {}
+
+        for item in apps:
+            label = (
+                f"{item['company']} "
+                f"({item['position']}) "
+                f"- ID:{item['id']}"
+            )
+            delete_options[label] = item["id"]
+
+        selected_item = st.selectbox(
+            "削除する項目を選択",
+            options=list(delete_options.keys()),
+        )
+
+        confirmed = st.checkbox(
+            "削除する内容を確認しました"
+        )
+
+        delete_clicked = st.button(
+            "選択した項目を削除",
+            type="secondary",
+            disabled=not confirmed,
+            use_container_width=True,
+        )
+
+        if delete_clicked:
+            delete_application(
+                conn,
+                delete_options[selected_item],
+            )
+            st.success("削除しました。")
+            st.rerun()
 
     with tab_stats:
         st.subheader("応募データの集計")

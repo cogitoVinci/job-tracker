@@ -8,20 +8,20 @@ from job_tracker.stats import (
 
 def test_count_by_status() -> None:
     applications = [
-        {"status": "応募済み"},
+        {"status": "ES"},
         {"status": "面接"},
         {"status": "面接"},
     ]
 
     assert count_by_status(applications) == {
-        "応募済み": 1,
+        "ES": 1,
         "面接": 2,
     }
 
 
 def test_calculate_total() -> None:
     applications = [
-        {"status": "応募済み"},
+        {"status": "ES"},
         {"status": "面接"},
     ]
 
@@ -32,7 +32,7 @@ def test_calculate_success_rate() -> None:
     applications = [
         {"status": "内定"},
         {"status": "不合格"},
-        {"status": "通過"},
+        {"status": "内定"},
         {"status": "面接"},
     ]
 
