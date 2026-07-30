@@ -1,5 +1,9 @@
-from job_tracker.app import render_app
+from pathlib import Path
+import sys
 
+src_dir = Path(__file__).resolve().parent / "src"
+sys.path.insert(0, str(src_dir))
 
-if __name__ == "__main__":
-    render_app()
+from job_tracker.app import main
+
+main()
