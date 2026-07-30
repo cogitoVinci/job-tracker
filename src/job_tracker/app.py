@@ -29,149 +29,118 @@ STATUS_COLORS = {
     "不合格":   {"bg": "#fdecec", "text": "#c53c33"},
 }
 
+CUSTOM_CSS = """
+<style>
+.stApp { background: #ffffff; }
+.block-container { max-width: 1180px; padding-top: 2rem; padding-bottom: 3rem; }
+[data-testid="stSidebar"] { background: #f7fbff; border-right: 1px solid #dbeafe; }
+div[data-testid="stDataFrame"] { border: 1px solid #dbeafe; border-radius: 12px; overflow: hidden; }
+div[data-testid="stAlert"] { border-radius: 10px; }
 
-def apply_custom_style():
-    st.markdown(
-        """
-        <style>
-        .stApp { background: #ffffff; }
-        .block-container { max-width: 1180px; padding-top: 2rem; padding-bottom: 3rem; }
-        [data-testid="stSidebar"] { background: #f7fbff; border-right: 1px solid #dbeafe; }
-        div[data-testid="stDataFrame"] { border: 1px solid #dbeafe; border-radius: 12px; overflow: hidden; }
-        div[data-testid="stAlert"] { border-radius: 10px; }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+.hero-banner {
+    background: linear-gradient(120deg, #2554d9 0%, #2878e8 55%, #249fc5 100%);
+    padding: 28px 32px;
+    border-radius: 20px;
+    box-shadow: 0 16px 34px rgba(37, 84, 217, .18);
+    margin-bottom: 1.5rem;
+}
+.hero-label {
+    color: #d8efff;
+    font-weight: 700;
+    font-size: .78rem;
+    letter-spacing: .12em;
+    margin-bottom: .45rem;
+}
+.hero-title {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 750;
+    line-height: 1.25;
+    margin-bottom: .55rem;
+}
+.hero-subtitle { color: #edf7ff; font-size: .96rem; margin: 0; }
 
-    st.markdown(
-        """
-        <style>
-        .hero-banner {
-            background: linear-gradient(120deg, #2554d9 0%, #2878e8 55%, #249fc5 100%);
-            padding: 28px 32px;
-            border-radius: 20px;
-            box-shadow: 0 16px 34px rgba(37, 84, 217, .18);
-            margin-bottom: 1.5rem;
-        }
-        .hero-label {
-            color: #d8efff;
-            font-weight: 700;
-            font-size: .78rem;
-            letter-spacing: .12em;
-            margin-bottom: .45rem;
-        }
-        .hero-title {
-            color: #fff;
-            font-size: 2rem;
-            font-weight: 750;
-            line-height: 1.25;
-            margin-bottom: .55rem;
-        }
-        .hero-subtitle { color: #edf7ff; font-size: .96rem; margin: 0; }
+[data-testid="stMetric"] {
+    background: #fff;
+    border: 1px solid #dbeafe;
+    border-radius: 15px;
+    padding: 16px 18px;
+    box-shadow: 0 8px 20px rgba(30, 90, 160, .07);
+}
+[data-testid="stMetricLabel"] { color: #55789a; font-weight: 600; }
+[data-testid="stMetricValue"] { color: #173d7a; font-weight: 750; }
 
-        [data-testid="stMetric"] {
-            background: #fff;
-            border: 1px solid #dbeafe;
-            border-radius: 15px;
-            padding: 16px 18px;
-            box-shadow: 0 8px 20px rgba(30, 90, 160, .07);
-        }
-        [data-testid="stMetricLabel"] { color: #55789a; font-weight: 600; }
-        [data-testid="stMetricValue"] { color: #173d7a; font-weight: 750; }
+.deadline-box {
+    background: linear-gradient(90deg, #eef7ff 0%, #f8fcff 100%);
+    border: 1px solid #cfe7fa;
+    border-left: 5px solid #288ee8;
+    border-radius: 11px;
+    padding: 12px 16px;
+    margin-bottom: 9px;
+    color: #173b63;
+}
 
-        .deadline-box {
-            background: linear-gradient(90deg, #eef7ff 0%, #f8fcff 100%);
-            border: 1px solid #cfe7fa;
-            border-left: 5px solid #288ee8;
-            border-radius: 11px;
-            padding: 12px 16px;
-            margin-bottom: 9px;
-            color: #173b63;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+.stButton, .stDownloadButton { width: 100%; }
+.stButton > button, .stDownloadButton > button {
+    width: 100%;
+    min-height: 2.8rem;
+    padding: .65rem 1.1rem;
+    background: linear-gradient(135deg, #2356d8 0%, #2878e8 55%, #25a9d6 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: .95rem;
+    white-space: nowrap;
+    box-shadow: 0 5px 14px rgba(35, 86, 216, .22);
+    transition: transform .18s, filter .18s;
+}
+.stButton > button:hover, .stDownloadButton > button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
+.stButton > button:disabled, .stDownloadButton > button:disabled {
+    background: #dce9f8;
+    color: #7795b4;
+    cursor: not-allowed;
+}
 
-    st.markdown(
-        """
-        <style>
-        .stButton, .stDownloadButton { width: 100%; }
-        .stButton > button, .stDownloadButton > button {
-            min-height: 2.8rem;
-            padding: .65rem 1.1rem;
-            background: linear-gradient(135deg, #2356d8 0%, #2878e8 55%, #25a9d6 100%);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: .95rem;
-            white-space: nowrap;
-            box-shadow: 0 5px 14px rgba(35, 86, 216, .22);
-            transition: transform .18s, filter .18s;
-        }
-        .stButton > button:hover, .stDownloadButton > button:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.05);
-        }
-        .stButton > button:disabled, .stDownloadButton > button:disabled {
-            background: #dce9f8;
-            color: #7795b4;
-            cursor: not-allowed;
-        }
-
-        .stTabs [data-baseweb="tab-list"] { gap: 1.4rem; border-bottom: 1px solid #dbeafe; }
-        .stTabs [data-baseweb="tab"] { color: #6d8eaa; font-weight: 650; }
-        .stTabs [aria-selected="true"] { color: #2356d8; }
-        .stTabs [data-baseweb="tab-highlight"] { background-color: #2878e8; height: 3px; }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
+.stTabs [data-baseweb="tab-list"] { gap: 1.4rem; border-bottom: 1px solid #dbeafe; }
+.stTabs [data-baseweb="tab"] { color: #6d8eaa; font-weight: 650; }
+.stTabs [aria-selected="true"] { color: #2356d8; }
+.stTabs [data-baseweb="tab-highlight"] { background-color: #2878e8; height: 3px; }
+</style>
+"""
 
 def get_upcoming_deadlines(applications, days=7):
-    # deadline未設定はスキップ
     today = date.today()
     limit = today + timedelta(days=days)
-    result = []
+    upcoming = []
+
     for item in applications:
-        raw = item.get("deadline")
-        if not raw:
+        deadline_value = item.get("deadline")
+        if not deadline_value:
             continue
-        d = date.fromisoformat(raw)
-        if not (today <= d <= limit):
+
+        try:
+            deadline = date.fromisoformat(deadline_value)
+        except ValueError:
             continue
-        result.append({
-            "company": item["company"],
-            "position": item["position"],
-            "deadline": d,
-            "days_left": (d - today).days,
-        })
-    return result
+
+        if today <= deadline <= limit:
+            upcoming.append(
+                {
+                    "company": item["company"],
+                    "position": item["position"],
+                    "deadline": deadline,
+                    "days_left": (deadline - today).days,
+                }
+            )
+
+    return upcoming
 
 
-def style_status_column(df):
-    def _badge(value):
-        colors = STATUS_COLORS.get(value, {"bg": "#f2f2f2", "text": "#555"})
-        return (
-            f"background-color: {colors['bg']}; "
-            f"color: {colors['text']}; "
-            "font-weight: 700; border-radius: 6px;"
-        )
-    styled = df.style.map(_badge, subset=["ステータス"])
-    styled = styled.set_properties(subset=["ID", "企業名"], **{"text-align": "center"})
-    return styled
-
-
-def main():
-    st.set_page_config(page_title="就活管理ツール", page_icon="📋", layout="wide")
-    apply_custom_style()
-
-    conn = connect()
-    initialize_database(conn)
-
+def render_sidebar_form(conn):
     st.sidebar.header("新しい応募を追加")
 
     with st.sidebar.form("add_form", clear_on_submit=True):
@@ -183,26 +152,55 @@ def main():
         use_deadline = st.checkbox("締切日を設定する")
         deadline = None
         if use_deadline:
-            deadline = st.date_input("締切日", value=date.today() + timedelta(days=7))
-
-        notes = st.text_area("メモ", placeholder="説明会、面接、提出物など")
-        submitted = st.form_submit_button("追加する", type="primary", use_container_width=True)
-
-    if submitted:
-        if not company.strip() or not position.strip():
-            st.sidebar.error("企業名と職種を入力してください。")
-        else:
-            application = Application(
-                company=company.strip(),
-                position=position.strip(),
-                status=status,
-                applied_date=applied_date,
-                deadline=deadline,
-                notes=notes.strip(),
+            deadline = st.date_input(
+                "締切日",
+                value=date.today() + timedelta(days=7),
             )
-            add_application(conn, application)
-            st.sidebar.success("追加しました。")
-            st.rerun()
+
+        notes = st.text_area(
+            "メモ",
+            placeholder="説明会、面接、提出物など",
+        )
+
+        submitted = st.form_submit_button(
+            "追加する",
+            type="primary",
+            use_container_width=True,
+        )
+
+    if not submitted:
+        return
+
+    if not company.strip() or not position.strip():
+        st.sidebar.error("企業名と職種を入力してください。")
+        return
+
+    application = Application(
+        company=company.strip(),
+        position=position.strip(),
+        status=status,
+        applied_date=applied_date,
+        deadline=deadline,
+        notes=notes.strip(),
+    )
+
+    add_application(conn, application)
+    st.sidebar.success("追加しました。")
+    st.rerun()
+
+
+def main():
+    st.set_page_config(
+        page_title="就活管理ツール",
+        page_icon="📋",
+        layout="wide",
+    )
+    st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+    conn = connect()
+    initialize_database(conn)
+
+    render_sidebar_form(conn)
 
     st.markdown(
         """
@@ -217,15 +215,16 @@ def main():
         unsafe_allow_html=True,
     )
 
-    applications = get_applications(conn)
+    apps = get_applications(conn)
 
-    if not applications:
+    if not apps:
         st.info("まだ応募データがありません。左側のフォームから追加してください。")
 
-    total = calculate_total(applications)
-    success_rate = calculate_success_rate(applications)
-    status_counts = count_by_status(applications)
-    upcoming = get_upcoming_deadlines(applications)
+    upcoming = get_upcoming_deadlines(apps)
+
+    total = calculate_total(apps)
+    success_rate = calculate_success_rate(apps)
+    status_counts = count_by_status(apps)
 
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("応募件数", total)
@@ -237,8 +236,13 @@ def main():
 
     if upcoming:
         st.subheader("直近の締切")
-        for item in sorted(upcoming, key=lambda v: v["deadline"]):
-            days_text = "本日締切" if item["days_left"] == 0 else f"あと{item['days_left']}日"
+
+        for item in sorted(upcoming, key=lambda value: value["deadline"]):
+            if item["days_left"] == 0:
+                days_text = "本日締切"
+            else:
+                days_text = f"あと{item['days_left']}日"
+
             st.markdown(
                 f"""
                 <div class="deadline-box">
@@ -255,34 +259,93 @@ def main():
         st.subheader("一覧・編集")
 
         filter_col, search_col = st.columns([1, 2])
-        selected_statuses = filter_col.multiselect("ステータス絞り込み", STATUSES)
-        keyword = search_col.text_input("キーワード検索", placeholder="企業名や職種で検索")
 
-        filtered = applications
+        selected_statuses = filter_col.multiselect(
+            "ステータス絞り込み",
+            STATUSES,
+        )
+
+        keyword = search_col.text_input(
+            "キーワード検索",
+            placeholder="企業名や職種で検索",
+        )
+
+        filtered = apps
+
         if selected_statuses:
-            filtered = [item for item in filtered if item["status"] in selected_statuses]
+            filtered = [
+                item
+                for item in filtered
+                if item["status"] in selected_statuses
+            ]
 
         if keyword:
             word = keyword.lower()
-            matched = []
-            for item in filtered:
-                if word in item["company"].lower() or word in item["position"].lower():
-                    matched.append(item)
-            filtered = matched
+            filtered = [
+                item
+                for item in filtered
+                if word in item["company"].lower()
+                or word in item["position"].lower()
+            ]
 
-        if not applications:
+        if not apps:
             st.info("応募データを追加すると、ここに一覧が表示されます。")
+
         elif not filtered:
             st.warning("条件に合うデータが見つかりません。")
+
         else:
             df = pd.DataFrame(filtered)[
-                ["id", "company", "position", "status", "applied_date", "deadline", "notes"]
+                [
+                    "id",
+                    "company",
+                    "position",
+                    "status",
+                    "applied_date",
+                    "deadline",
+                    "notes",
+                ]
             ]
-            df.columns = ["ID", "企業名", "職種", "ステータス", "応募日", "締切日", "メモ"]
 
-            st.dataframe(style_status_column(df), use_container_width=True, hide_index=True)
+            df.columns = [
+                "ID",
+                "企業名",
+                "職種",
+                "ステータス",
+                "応募日",
+                "締切日",
+                "メモ",
+            ]
+
+            # この色分けは一覧だけで使うので、ここでまとめて指定する
+            def status_style(value):
+                colors = STATUS_COLORS.get(
+                    value,
+                    {"bg": "#f2f2f2", "text": "#555"},
+                )
+                return (
+                    f"background-color: {colors['bg']}; "
+                    f"color: {colors['text']}; "
+                    "font-weight: 700; border-radius: 6px;"
+                )
+
+            styled_df = df.style.map(
+                status_style,
+                subset=["ステータス"],
+            )
+            styled_df = styled_df.set_properties(
+                subset=["ID", "企業名"],
+                **{"text-align": "center"},
+            )
+
+            st.dataframe(
+                styled_df,
+                use_container_width=True,
+                hide_index=True,
+            )
 
             csv_data = df.to_csv(index=False).encode("utf-8-sig")
+
             st.download_button(
                 "CSV形式でダウンロード",
                 data=csv_data,
@@ -294,12 +357,24 @@ def main():
             st.divider()
             st.subheader("データの削除")
 
-            delete_options = {
-                f"{item['company']} ({item['position']}) - ID:{item['id']}": item["id"]
-                for item in applications
-            }
-            selected_item = st.selectbox("削除する項目を選択", options=list(delete_options.keys()))
-            confirmed = st.checkbox("削除する内容を確認しました")
+            delete_options = {}
+
+            for item in apps:
+                label = (
+                    f"{item['company']} "
+                    f"({item['position']}) "
+                    f"- ID:{item['id']}"
+                )
+                delete_options[label] = item["id"]
+
+            selected_item = st.selectbox(
+                "削除する項目を選択",
+                options=list(delete_options.keys()),
+            )
+
+            confirmed = st.checkbox(
+                "削除する内容を確認しました"
+            )
 
             delete_clicked = st.button(
                 "選択した項目を削除",
@@ -309,34 +384,38 @@ def main():
             )
 
             if delete_clicked:
-                delete_application(conn, delete_options[selected_item])
+                delete_application(
+                    conn,
+                    delete_options[selected_item],
+                )
                 st.success("削除しました。")
                 st.rerun()
 
     with tab_stats:
         st.subheader("応募データの集計")
 
-        if not applications:
+        if not apps:
             st.info("応募データを追加すると、集計グラフが表示されます。")
         else:
-            all_data = pd.DataFrame(applications)
-            all_data["applied_date"] = pd.to_datetime(all_data["applied_date"])
-            all_data["応募月"] = all_data["applied_date"].dt.strftime("%Y-%m")
+            data = pd.DataFrame(apps)
+            data["applied_date"] = pd.to_datetime(data["applied_date"])
+            data["応募月"] = data["applied_date"].dt.strftime("%Y-%m")
 
-            status_data = all_data["status"].value_counts().reset_index()
+            status_data = data["status"].value_counts().reset_index()
             status_data.columns = ["選考状況", "件数"]
 
-            monthly_data = all_data.groupby("応募月").size().reset_index(name="件数")
+            monthly_data = data.groupby("応募月").size().reset_index(name="件数")
 
-            col1, col2 = st.columns(2)
-            with col1:
+            chart_left, chart_right = st.columns(2)
+
+            with chart_left:
                 st.markdown("#### 選考状況別の応募件数")
                 st.bar_chart(
                     status_data.set_index("選考状況"),
                     use_container_width=True,
                 )
 
-            with col2:
+            with chart_right:
                 st.markdown("#### 月別応募件数")
                 st.line_chart(
                     monthly_data.set_index("応募月"),
