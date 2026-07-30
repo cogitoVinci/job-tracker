@@ -218,10 +218,9 @@ def main():
     )
 
     applications = get_applications(conn)
+
     if not applications:
         st.info("まだ応募データがありません。左側のフォームから追加してください。")
-        conn.close()
-        return
 
     total = calculate_total(applications)
     success_rate = calculate_success_rate(applications)
@@ -271,7 +270,9 @@ def main():
                     matched.append(item)
             filtered = matched
 
-        if not filtered:
+        if not applications:
+            st.info("応募データを追加すると、ここに一覧が表示されます。")
+        elif not filtered:
             st.warning("条件に合うデータが見つかりません。")
         else:
             df = pd.DataFrame(filtered)[
@@ -315,26 +316,39 @@ def main():
     with tab_stats:
         st.subheader("応募データの集計")
 
-        all_data = pd.DataFrame(applications)
-        all_data["applied_date"] = pd.to_datetime(all_data["applied_date"])
-        all_data["応募月"] = all_data["applied_date"].dt.strftime("%Y-%m")
+        if not applications:
+            st.info("応募データを追加すると、集計グラフが表示されます。")
+        else:
+            all_data = pd.DataFrame(applications)
+            all_data["applied_date"] = pd.to_datetime(all_data["applied_date"])
+            all_data["応募月"] = all_data["applied_date"].dt.strftime("%Y-%m")
 
-        status_data = all_data["status"].value_counts().reset_index()
-        status_data.columns = ["選考状況", "件数"]
+            status_data = all_data["status"].value_counts().reset_index()
+            status_data.columns = ["選考状況", "件数"]
 
-        monthly_data = all_data.groupby("応募月").size().reset_index(name="件数")
+            monthly_data = all_data.groupby("応募月").size().reset_index(name="件数")
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("#### 選考状況別の応募件数")
-            st.bar_chart(status_data.set_index("選考状況"), use_container_width=True)
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown("#### 選考状況別の応募件数")
+                st.bar_chart(
+                    status_data.set_index("選考状況"),
+                    use_container_width=True,
+                )
 
-        with col2:
-            st.markdown("#### 月別応募件数")
-            st.line_chart(monthly_data.set_index("応募月"), use_container_width=True)
+            with col2:
+                st.markdown("#### 月別応募件数")
+                st.line_chart(
+                    monthly_data.set_index("応募月"),
+                    use_container_width=True,
+                )
 
-        st.markdown("#### 選考状況サマリー")
-        st.dataframe(status_data, use_container_width=True, hide_index=True)
+            st.markdown("#### 選考状況サマリー")
+            st.dataframe(
+                status_data,
+                use_container_width=True,
+                hide_index=True,
+            )
 
     conn.close()
 
