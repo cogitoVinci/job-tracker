@@ -521,12 +521,17 @@ def main():
             status_data = data["status"].value_counts().reset_index()
             status_data.columns = ["選考状況", "件数"]
 
-            monthly_data = data.groupby("応募月").size().reset_index(name="件数")
+            applied_data = data[data["status"] != "検討中"]
+            monthly_data = (
+                applied_data.groupby("応募月")
+                .size()
+                .reset_index(name="件数")
+            )
 
             chart_left, chart_right = st.columns(2)
 
             with chart_left:
-                st.markdown("#### 選考状況別の応募件数")
+                st.markdown("#### 選考状況別の登録件数")
                 st.bar_chart(
                     status_data.set_index("選考状況"),
                     use_container_width=True,

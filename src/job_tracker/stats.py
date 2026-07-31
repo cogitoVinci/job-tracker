@@ -15,21 +15,21 @@ def calculate_total(applications: Iterable[dict]) -> int:
 
 
 def calculate_success_rate(applications: Iterable[dict]) -> float:
-    application_list = list(applications)
+    application_list = [
+        application
+        for application in applications
+        if application["status"] != "検討中"
+    ]
 
     if not application_list:
         return 0.0
 
-    successful_statuses = {"内定"}
-
     successful_count = sum(
-        1
+        application["status"] == "内定"
         for application in application_list
-        if application["status"] in successful_statuses
     )
 
     return successful_count / len(application_list)
-
 
 def count_upcoming_deadlines(
     applications: Iterable[dict],

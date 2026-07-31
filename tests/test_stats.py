@@ -51,3 +51,20 @@ def test_count_upcoming_deadlines() -> None:
     ]
 
     assert count_upcoming_deadlines(applications, "2026-07-28") == 1
+
+
+def test_calculate_success_rate_excludes_considering() -> None:
+    applications = [
+        {"status": "検討中"},
+        {"status": "内定"},
+    ]
+
+    assert calculate_success_rate(applications) == 1.0
+
+
+def test_calculate_success_rate_only_considering() -> None:
+    applications = [
+        {"status": "検討中"},
+    ]
+
+    assert calculate_success_rate(applications) == 0.0
