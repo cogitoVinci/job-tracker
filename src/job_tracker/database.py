@@ -91,3 +91,40 @@ def delete_application(
         (application_id,),
     )
     connection.commit()
+
+
+def update_application(
+    connection: sqlite3.Connection,
+    application_id: int,
+    application: Application,
+) -> None:
+    cursor = connection.execute(
+        """
+        UPDATE applications
+        SET
+            company = ?,
+            position = ?,
+            status = ?,
+            applied_date = ?,
+            deadline = ?,
+            notes = ?
+        WHERE id = ?
+        """,
+        (
+            application.company,
+            application.position,
+            application.status,
+            application.applied_date.isoformat(),
+            application.deadline.isoformat()
+            if application.deadline
+            else None,
+            application.notes,
+            application_id,
+        ),
+    )
+    connection.commit()
+
+    if cursor.rowcount == 0:
+        raise ValueError(
+            f"Application ID {application_id} was not found."
+        )
