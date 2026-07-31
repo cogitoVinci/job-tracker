@@ -122,6 +122,8 @@ div[data-testid="stAlert"] { border-radius: 10px; }
 """
 
 def get_upcoming_deadlines(applications, days=7):
+    # deadlineが空のデータ(検討中のまま登録しただけとか)があるので、
+    # get()で受けてからスキップする。最初これで落ちたので忘れないように書いておく
     today = date.today()
     limit = today + timedelta(days=days)
     upcoming = []
@@ -134,15 +136,17 @@ def get_upcoming_deadlines(applications, days=7):
         try:
             deadline = date.fromisoformat(deadline_value)
         except ValueError:
+            # 日付フォーマットが崩れてるデータが稀にあるので無視する
             continue
 
         if today <= deadline <= limit:
+            days_left = (deadline - today).days
             upcoming.append(
                 {
                     "company": item["company"],
                     "position": item["position"],
                     "deadline": deadline,
-                    "days_left": (deadline - today).days,
+                    "days_left": days_left,
                 }
             )
 
@@ -177,6 +181,8 @@ def render_sidebar_form(conn):
     if not submitted:
         return
 
+    # 企業名か職種のどっちか未入力でもまとめてエラーにしてる
+    # （個別にエラー出す実装にしてたけど長くなるのでやめた）
     if not company.strip() or not position.strip():
         st.sidebar.error("企業名と職種を入力してください。")
         return
@@ -368,11 +374,11 @@ def main():
         st.subheader("データの編集")
 
         if apps:
-            edit_options = {
-                f'{item["company"]} / {item["position"]}（ID:{item["id"]}）':
-                    item
-                for item in apps
-            }
+            # ID込みのラベルにしないと同じ会社名が複数あるとき区別つかなくて詰んだので
+            edit_options = {}
+            for item in apps:
+                label = f'{item["company"]} / {item["position"]}（ID:{item["id"]}）'
+                edit_options[label] = item
 
             selected_edit_label = st.selectbox(
                 "編集する項目を選択",
@@ -444,6 +450,8 @@ def main():
                 )
 
             if update_submitted:
+                # 追加フォームと違って、編集は company/position 別々にエラー出してる
+                # （どっちが空か分かった方が直しやすいので）
                 if not edit_company.strip():
                     st.error("企業名を入力してください。")
                 elif not edit_position.strip():
@@ -521,9 +529,11 @@ def main():
             status_data = data["status"].value_counts().reset_index()
             status_data.columns = ["選考状況", "件数"]
 
-            applied_data = data[data["status"] != "検討中"]
+            # 検討中は応募してないので月別グラフからは除外
+            # TODO: 検討中だけの推移も見たくなったら別グラフ用意する
+            applied_only = data[data["status"] != "検討中"]
             monthly_data = (
-                applied_data.groupby("応募月")
+                applied_only.groupby("応募月")
                 .size()
                 .reset_index(name="件数")
             )
