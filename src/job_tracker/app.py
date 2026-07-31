@@ -171,7 +171,7 @@ def render_sidebar_form(conn):
         submitted = st.form_submit_button(
             "追加する",
             type="primary",
-            use_container_width=True,
+            width="stretch",
         )
 
     if not submitted:
@@ -350,7 +350,7 @@ def main():
 
             st.dataframe(
                 styled_df,
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
             )
 
@@ -361,7 +361,7 @@ def main():
                 data=csv_data,
                 file_name="jobs.csv",
                 mime="text/csv",
-                use_container_width=True,
+                width="stretch",
             )
 
         st.divider()
@@ -440,7 +440,7 @@ def main():
                 update_submitted = st.form_submit_button(
                     "変更を保存",
                     type="primary",
-                    use_container_width=True,
+                    width="stretch",
                 )
 
             if update_submitted:
@@ -497,7 +497,7 @@ def main():
             "選択した項目を削除",
             type="secondary",
             disabled=not confirmed,
-            use_container_width=True,
+            width="stretch",
         )
 
         if delete_clicked:
@@ -534,20 +534,20 @@ def main():
                 st.markdown("#### 選考状況別の登録件数")
                 st.bar_chart(
                     status_data.set_index("選考状況"),
-                    use_container_width=True,
+                    width="stretch",
                 )
 
             with chart_right:
                 st.markdown("#### 月別応募件数")
                 st.line_chart(
                     monthly_data.set_index("応募月"),
-                    use_container_width=True,
+                    width="stretch",
                 )
 
             st.markdown("#### 選考状況サマリー")
             st.dataframe(
                 status_data,
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
             )
 
