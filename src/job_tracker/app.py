@@ -217,7 +217,7 @@ def main():
     st.markdown(
         """
         <div class="hero-banner">
-            <div class="hero-label">CAREER DASHBOARD</div>
+            <div class="hero-label">JOB TRACKER</div>
             <div class="hero-title">選考状況をひと目で管理</div>
             <p class="hero-subtitle">
                 応募企業、選考ステータス、締切をまとめて確認できます。
