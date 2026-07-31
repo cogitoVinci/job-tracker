@@ -150,7 +150,7 @@ def get_upcoming_deadlines(applications, days=7):
 
 
 def render_sidebar_form(conn):
-    st.sidebar.header("新しい応募を追加")
+    st.sidebar.header("企業・選考情報を追加")
 
     with st.sidebar.form("add_form", clear_on_submit=True):
         company = st.text_input("企業名", placeholder="例：株式会社〇〇")
@@ -165,7 +165,7 @@ def render_sidebar_form(conn):
 
         notes = st.text_area(
             "メモ",
-            placeholder="説明会、面接、提出物など",
+            placeholder="次回予定、提出物、連絡事項など",
         )
 
         submitted = st.form_submit_button(
