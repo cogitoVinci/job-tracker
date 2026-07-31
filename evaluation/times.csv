@@ -1,0 +1,25 @@
+task,method,trial,time_seconds
+企業を1件追加,Excel,1,32
+企業を1件追加,Excel,2,45
+企業を1件追加,Excel,3,35
+企業を1件追加,Job Tracker,1,15
+企業を1件追加,Job Tracker,2,17
+企業を1件追加,Job Tracker,3,10
+面接中の企業を探す,Excel,1,16
+面接中の企業を探す,Excel,2,10
+面接中の企業を探す,Excel,3,13
+面接中の企業を探す,Job Tracker,1,3
+面接中の企業を探す,Job Tracker,2,5
+面接中の企業を探す,Job Tracker,3,5
+7日以内の締切を探す,Excel,1,21
+7日以内の締切を探す,Excel,2,15
+7日以内の締切を探す,Excel,3,25
+7日以内の締切を探す,Job Tracker,1,2
+7日以内の締切を探す,Job Tracker,2,3
+7日以内の締切を探す,Job Tracker,3,2
+選考状況の件数を確認,Excel,1,21
+選考状況の件数を確認,Excel,2,18
+選考状況の件数を確認,Excel,3,25
+選考状況の件数を確認,Job Tracker,1,8
+選考状況の件数を確認,Job Tracker,2,7
+選考状況の件数を確認,Job Tracker,3,5
